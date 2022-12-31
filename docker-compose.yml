@@ -1,0 +1,67 @@
+version: "3.1"
+services:
+    replcation_mongo_1:
+      image: mongo
+      container_name: replication_mongo_1
+      ports:
+        - "27018:27017"
+      volumes:
+        - "./data/rs1:/data/db"
+        - "./mongod.conf:/etc/mongod.conf"
+        - "./mongodb.key:/etc/mongodb.key"
+      networks:
+            replication_mongo:
+               ipv4_address: 172.57.12.12
+      command: --replSet mdbDefGuide --bind_ip_all
+      environment:
+        - MONGO_INITDB_DATABASE=admin
+        - MONGO_INITDB_ROOT_USERNAME=admin
+        - MONGO_INITDB_ROOT_PASSWORD=admin
+      entrypoint: ["mongod", "--config", "/etc/mongod.conf"]
+
+
+    replication_mongo_2:
+      image: mongo
+      container_name: replication_mongo_2
+      ports:
+        - "27019:27017"
+      volumes:
+        - "./data/rs2:/data/db"
+        - "./mongod.conf:/etc/mongod.conf"  
+        - "./mongodb.key:/etc/mongodb.key"
+      networks:
+            replication_mongo:
+               ipv4_address: 172.57.12.13
+      command: --replSet mdbDefGuide --bind_ip_all
+      environment:
+        - MONGO_INITDB_DATABASE=admin
+        - MONGO_INITDB_ROOT_USERNAME=admin
+        - MONGO_INITDB_ROOT_PASSWORD=admin
+      entrypoint: ["mongod", "--config", "/etc/mongod.conf"]
+
+
+    replication_mongo_3:
+     image: mongo
+     container_name: replication_mongo_3
+     ports:
+       - "27020:27017"
+     volumes:
+       - "./data/rs3:/data/db"
+       - "./mongod.conf:/etc/mongod.conf"
+       - "./mongodb.key:/etc/mongodb.key"
+     networks:
+           replication_mongo:
+              ipv4_address: 172.57.12.14
+     command: --replSet mdbDefGuide --bind_ip_all
+     environment:
+       - MONGO_INITDB_DATABASE=admin
+       - MONGO_INITDB_ROOT_USERNAME=admin
+       - MONGO_INITDB_ROOT_PASSWORD=admin
+     entrypoint: ["mongod", "--config", "/etc/mongod.conf"]
+
+networks:
+  replication_mongo:
+      driver: bridge
+      ipam:
+        config:
+          - subnet: 172.57.0.0/16 
